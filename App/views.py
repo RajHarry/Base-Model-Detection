@@ -129,11 +129,11 @@ def model_process_image(request):
                         output_info, img_output,out_image = inference(image, draw_result=True, target_shape=(260, 260))
                 elif(request.POST.get('model') == "YOLO"):
                         out_image = yolo_image_process(image)
-                        cv2.imwrite("cv2_image_recorded_yolo.jpg",out_image)
                 else:
                         print("Something is Wring>>")
                 # base64_encoded = base64.b64encode(image)
-                with open('cv2_image_recorded_yolo.jpg', 'rb') as imageFile:
+                cv2.imwrite("cv2_image_recorded.jpg",out_image)
+                with open('cv2_image_recorded.jpg', 'rb') as imageFile:
                     str_en = "data:image/jpeg;base64,"+str(base64.b64encode(imageFile.read())).replace("b'","")[:-1]
                 #print(str_en)
                 #print(base64_encoded)
