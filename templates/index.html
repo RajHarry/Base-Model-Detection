@@ -73,7 +73,7 @@
             <img
               src="{% static 'images/camera.png' %}"
               class="th-list-image"
-              onClick="take_snapshot()"
+              onclick="take_snapshot()"
               alt="camare"
               style="cursor: pointer"
             />
@@ -200,30 +200,31 @@
       });
     </script>
     <script language="JavaScript">
-      Webcam.set({
-       width: 320,
-       height: 240,
-       image_format: 'jpeg',
-       jpeg_quality: 90
-      });
-      Webcam.attach('#my_camera');
+      	Webcam.set({
+       		width: 320,
+       		height: 240,
+       		image_format: 'jpeg',
+       		jpeg_quality: 90
+      	});
+      	Webcam.attach('#my_camera');
 
-      function take_snapshot() {  
-    // take snapshot and get image data
-    Webcam.snap( function(data_uri) {
-    // display results in page
-    //  document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-    //  console.log(JSON.stringify(data_uri))
-     array = Array.from(data_uri);
-     $.post(
-        "model_process_image",
-        {image:data_uri},
-        function(data,status){
-          document.getElementById('display-img').innerHTML = '<img src="'+data[0]["encoded_image"]+'"/>';
-         console.log(data,status);
-        //  take_snapshot()
-        });
-      }); 
-    }
+      	function take_snapshot() {  
+		    // take snapshot and get image data
+		    Webcam.snap( function(data_uri) {
+		    // display results in page
+		    //  document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+		    //  console.log(JSON.stringify(data_uri))
+	     	array = Array.from(data_uri);
+	     	$.post(
+	        	"model_process_image",
+	        	{image:data_uri},
+	        	function(data,status){
+	          		document.getElementById('display-img').innerHTML = '<img src="'+data[0]["encoded_image"]+'"/>';
+	         		console.log(data,status);
+		        //  take_snapshot()
+		        });
+	      	}); 
+	    }
+	</script>
   </body>
 </html>
