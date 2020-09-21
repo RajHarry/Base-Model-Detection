@@ -6,16 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <style>
-      #my_camera{
+      /*#my_camera{
        width: 320px;
        height: 240px;
        border: 1px solid black;
-      }
+      }*/
     </style>
     {% load static %}
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'js/webcam.js' %}"></script>
-
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -37,191 +35,196 @@
   </head>
 
   <body>
+  	<!-- <div id="my_camera"></div>
+    	<input type=button value="Take Snapshot" onclick="take_snapshot()">
+    <div id="results" ></div> -->
+
     <div class="container mt-5 mb-5">
-      {% comment %} modal section {% endcomment %}
-      <div class="modal-outer" style="display: none">
-        <div class="modal-inner d-flex flex-column">
-          <div class="close d-flex justify-content-end align-items-center mb-3">
-            <span class="mr-2"> Close</span>
-            <img src="{% static 'images/cancel.svg' %}" alt="" class="mt-1" />
-          </div>
-          <img
-            src="{{image.url}}"
-            alt=""
-            id="modal-img"
-            style="height: 92.5%"
-          />
-        </div>
-      </div>
-      {% comment %} modal section ends {% endcomment %}
-      <div class="d-flex justify-content-center mb-4 th-gallry-title">
-        Face Mask Detection Project
-      </div>
-      <hr>
-      <div class="d-flex th-wraper">
-        <div class="th-img-div" style="cursor: pointer">
-          <img
-            src="{% static 'images/logo.png' %}"
-            class="th-image open"
-            id="display-img"
-            alt="image"
-            style="cursor: pointer"
-          />
-        </div>
-        <div class="th-list">
-          <div class="text-center mb-4">
-            <img
-              src="{% static 'images/camera.png' %}"
-              class="th-list-image"
-              onclick="take_snapshot()"
-              alt="camare"
-              style="cursor: pointer"
-            />
-            <p class="th-list-item mt-1">Photo</p>
-          </div>
-          <div class="text-center mt-3 mb-4">
-            <img
-              src="{% static 'images/cycle.png' %}"
-              alt="again"
-              class="th-list-image"
-              style="cursor: pointer"
-            />
-            <p class="th-list-item mt-1">Again</p>
-          </div>
-          <div class="text-center mt-3 mb-4">
-            <img
-              src="{% static 'images/download.png' %}"
-              alt="download"
-              class="th-list-image"
-              style="cursor: pointer"
-            />
-            <p class="th-list-item mt-1" style="margin-top: 5px;margin-left: 2px;">Download</p>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="d-flex justify-content-center">
-        <form
-          id="post-form"
-          enctype="multipart/form-data"
-          method="POST"
-          action=""
-        >
-          {% csrf_token %}
-          <div class="d-flex justify-content-center align-items-center mt-5">
-            <div style="font-size: 20px; color: #332a7c" class="mr-3">
-              Upload an Image
-            </div>
-            <div class="th-img-upload-btn">
-              <span class="th-img-upload-circle" style="margin-top: 5px;margin-left: 2px;"> + </span>
-              <input
-                type="file"
-                class=""
-                id="embedpollfileinput"
-                name="browse_image"
-                required
-              />
-            </div>
-            <input type="submit" value="Submit" class="btn btn-primary" />
-          </div>
-          <!-- <div class="ml-4 d-flex justify-content-center mt-3">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-          </div> -->
-        </form>
-      </div>
+      	{% comment %} modal section {% endcomment %}
+      	<div class="modal-outer" style="display: none">
+        	<div class="modal-inner d-flex flex-column">
+          		<div class="close d-flex justify-content-end align-items-center mb-3">
+            		<span onclick="webcam_close()" class="mr-2"> Close</span>
+            		<img onclick="webcam_close()" src="{% static 'images/cancel.svg' %}" alt="" class="mt-1" />
+          		</div>
+	          	<div class="d-flex th-wraper">
+		          	<div id="my_camera">
+			          	<img src="{{image.url}}" alt="" style="height: 92.5%" />
+		          	</div>
+		          	<div id="webcam_result">
+			          	<img src="{{image.url}}" alt="" style="height: 92.5%" />
+		          	</div>
+		        </div>
+		        <input type=button value="Predict" onclick="take_snapshot()">
+	        </div>
+      	</div>
+      	{% comment %} modal section ends {% endcomment %}
+      	<div class="d-flex justify-content-center mb-4 th-gallry-title">
+        	Face Mask Detection Project
+      	</div>
+      	<hr>
+      	<div class="d-flex th-wraper">
+        	<!-- Main Image Division Start-->
+        	<div class="th-img-div">
+	          	<img
+		            src="{% static 'images/logo.png' %}"
+		            class="th-image"
+		            id="display-img"
+		            alt="image"
+		            style="cursor: pointer"
+	          	/>
+        	</div>
+            	
+        	<!-- Main Image Division End -->
+        	<div class="th-list">
+	          	<div id="camera" class="text-center mb-4">
+	            	<img
+	            		src="{% static 'images/camera.png' %}"
+		              	id="webcam"
+		              	onclick="webcam_start()"
+		              	alt="camera"
+		              	style="cursor: pointer"
+		            />
+	            	<p class="th-list-item mt-1">Photo</p>
+	          	</div>
+	          	<div class="text-center mt-3 mb-4">
+	            	<img
+	              		src="{% static 'images/cycle.png' %}"
+	              		alt="again"
+	              		class="th-list-image"
+	              		style="cursor: pointer"
+	            	/>
+	            	<p class="th-list-item mt-1">Again</p>
+	          	</div>
+	          	<div class="text-center mt-3 mb-4">
+	            	<img
+	              		src="{% static 'images/download.png' %}"
+	              		alt="download"
+	              		class="th-list-image"
+	              		style="cursor: pointer"
+	            	/>
+	            	<p class="th-list-item mt-1" style="margin-top: 5px;margin-left: 2px;">Download</p>
+	          	</div>
+	        </div>
+    	</div>
+      	<hr>
+      	<div class="d-flex justify-content-center">
+        	<form id="post-form" enctype="multipart/form-data" method="POST" action=""> {% csrf_token %}
+	          	<div class="d-flex justify-content-center align-items-center mt-5">
+		            <div style="font-size: 20px; color: #332a7c" class="mr-3">
+		              Upload an Image
+		            </div>
+		            <div class="th-img-upload-btn">
+		              	<span class="th-img-upload-circle" style="margin-top: 5px;margin-left: 2px;"> + </span>
+		              	<input
+			                type="file"
+			                class=""
+			                id="embedpollfileinput"
+			                name="browse_image"
+			                required
+			             />
+		            </div>
+		            <input type="submit" value="Submit" class="btn btn-primary" />
+		        </div>
+		        <!-- <div class="ml-4 d-flex justify-content-center mt-3">
+		            <input type="submit" value="Submit" class="btn btn-primary" />
+		        </div> -->
+        	</form>
+    	</div>
       
-      <div class="th-gallery-wraper ml-lg-auto mr-lg-auto">
-        <div class="th-gallery">
-          <div class="row">
-            <hr>
-            <div class="col-12 flex-wrap d-flex justify-content-between">
-              {% for name,id,func,url in data %}
-              <div class="text-center">
-                <img
-                  src="{{url}}"
-                  class="th-bottom-image"
-                  onclick="{{func}}"
-                  alt="{{name}}"
-                  id="{{id}}"
-                  style="cursor: pointer"
-                />
-                <!-- <p class="th-gallery-image-name">{{name}}</p> -->
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    	<div class="th-gallery-wraper ml-lg-auto mr-lg-auto">
+	        <div class="th-gallery">
+	          	<div class="row">
+	            <hr>
+	            	<div class="col-12 flex-wrap d-flex justify-content-between">
+	              		{% for name,id,func,url in data %}
+			            <div class="text-center">
+			                <img
+			                  src="{{url}}"
+			                  class="th-bottom-image"
+			                  onclick="{{func}}"
+			                  alt="{{name}}"
+			                  id="{{id}}"
+			                  style="cursor: pointer"
+			                />
+			                <!-- <p class="th-gallery-image-name">{{name}}</p> -->
+			            </div>
+			            {% endfor %}
+			        </div>
+			    </div>
+		    </div>
+		</div>
+	</div>
     {% comment %} modal {% endcomment %}
 
-    <script>
-      $(document).ready(function () {
-        $(".open").click(function () {
-          $(".modal-outer").fadeIn("slow");
-        });
-      });
-
-      $(document).ready(function () {
-        $(".close").click(function () {
-          $(".modal-outer").fadeOut("slow");
-        });
-      });
-
-      function imageClick(num) {
-        var image_url = document.getElementById("im_click_id_" + num).src;
-        document.getElementById("display-img").src = image_url;
-        document.getElementById("modal-img").src = image_url;
-      }
-
-      $("#post-form").submit(function (e) {
-        e.preventDefault();
-        var fd = new FormData($("#post-form")[0]);
-        $(".LoaderWrapper").show();
-        $.ajax({
-          url: "image_details",
-          type: "POST",
-          data: fd,
-          processData: false,
-          contentType: false,
-          crossDomain: true,
-          enctype: "multipart/form-data",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          },
-          dataType: "json",
-          success: function (data) {
-            console.log("Success");
-            document.getElementById("display-img").src = data["image_url"];
-            document.getElementById("modal-img").src = data["image_url"];
-          },
-        });
-      });
-    </script>
     <script language="JavaScript">
-      	Webcam.set({
-       		width: 320,
-       		height: 240,
-       		image_format: 'jpeg',
-       		jpeg_quality: 90
+      	$("#post-form").submit(function (e) {
+	        e.preventDefault();
+	        var fd = new FormData($("#post-form")[0]);
+	        $(".LoaderWrapper").show();
+	        $.ajax({
+	          	url: "image_details",
+	          	type: "POST",
+	          	data: fd,
+	          	processData: false,
+	          	contentType: false,
+	          	crossDomain: true,
+	          	enctype: "multipart/form-data",
+	          	headers: {
+		            "Access-Control-Allow-Origin": "*",
+		            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+	          	},
+	          	dataType: "json",
+	          	success: function (data) {
+		            console.log("Success");
+		            document.getElementById("display-img").src = data["image_url"];
+	          	},
+	        });
       	});
-      	Webcam.attach('#my_camera');
-
+      	function imageClick(num) {
+	        var image_url = document.getElementById("im_click_id_" + num).src;
+	        
+	        $.post(
+	        	"image_details",
+	        	{'static':'yes','number':num,'model':"SSD"},
+	        	function(data,status){
+	          		document.getElementById('display-img').src = data["image_url"];
+	         		console.log(data,status);
+		         	// take_snapshot()
+		        });
+	        document.getElementById("display-img").src = image_url;
+	    }
+      	function webcam_start(){
+		    $(".modal-outer").fadeIn("slow");
+	      	Webcam.set({
+	       		width: 657,
+	       		height: 376,
+	       		image_format: 'jpeg',
+	       		jpeg_quality: 90
+	      	});
+	      	Webcam.attach('#my_camera');
+	      	document.getElementById('camera').innerHTML = '<img src="{% static "images/camera.png" %}" id="webcam" onclick="webcam_close()" alt="Stop Webcam" style="cursor: pointer"/> <p class="th-list-item mt-1">Photo</p>';
+	    }
+	    function webcam_close(){
+	    	$(".modal-outer").fadeOut("slow");
+	    	Webcam.reset('#my_camera');
+	    	document.getElementById('camera').innerHTML = '<img src="{% static "images/camera.png" %}" id="webcam" onclick="webcam_start()" alt="Start WebCam" style="cursor: pointer" /> <p class="th-list-item mt-1">Photo</p>';
+	    }
       	function take_snapshot() {  
 		    // take snapshot and get image data
-		    Webcam.snap( function(data_uri) {
+		    Webcam.snap(function(data_uri) {
 		    // display results in page
 		    //  document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-		    //  console.log(JSON.stringify(data_uri))
+		    // console.log(JSON.stringify(data_uri))
 	     	array = Array.from(data_uri);
+	     	// console.log(document.getElementById('display-img'))
 	     	$.post(
-	        	"model_process_image",
-	        	{image:data_uri},
+	        	"model_process",
+	        	{image:data_uri,model:"SSD"},
 	        	function(data,status){
-	          		document.getElementById('display-img').innerHTML = '<img src="'+data[0]["encoded_image"]+'"/>';
+	          		document.getElementById('webcam_result').innerHTML = '<img src="'+data[0]["encoded_image"]+'"/>';
 	         		console.log(data,status);
-		        //  take_snapshot()
+		         	// take_snapshot()
 		        });
 	      	}); 
 	    }
